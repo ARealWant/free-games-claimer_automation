@@ -1,22 +1,30 @@
 #!/bin/bash
 
-while true; do
-    cd /root/Documents/f_gc/free-games-claimer # <-- navigate to the folder free-games-claimer was cloned to
+# Navigate to the directory where free-games-claimer is cloned
+cd /root/Documents/f_gc/free-games-claimer
 
-    node gog &
-    pid_gog=$!
+# Function to wait for the completion of a process
+wait_for_process() {
+    while ps -p $1 > /dev/null; do
+        sleep 1
+    done
+}
 
-    wait $pid_gog
+# Start GOG claim
+node gog &
+pid_gog=$!
+wait_for_process $pid_gog
 
-    node epic-games &
-    pid_epic=$!
+# Start Epic Games claim
+node epic-games &
+pid_epic=$!
+wait_for_process $pid_epic
 
-    wait $pid_epic
+# Start Prime Gaming claim
+node prime-gaming &
+pid_prime=$!
+wait_for_process $pid_prime
 
-    node prime-gaming &
-    pid_prime=$!
-
-    wait $pid_prime
-    echo "Done! Waiting 12h..."
-    sleep 43200
-done
+# All claims completed
+echo "All claims completed. Waiting 12 hours..."
+sleep 43200  # 12 hours in seconds
